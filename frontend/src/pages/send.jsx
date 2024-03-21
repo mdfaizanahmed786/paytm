@@ -18,7 +18,7 @@ export const SendMoney = () => {
     const token = localStorage.getItem("token");
     try {
       await axios.post(
-        "http://localhost:3001/api/v1/accounts/transfer",
+        "https://paytm-j2ss.onrender.com/api/v1/accounts/transfer",
         {
           to: id,
           amount,

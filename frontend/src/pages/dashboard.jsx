@@ -13,7 +13,7 @@ function Dashboard() {
 
   const usersBalanceFetch = async () => {
     const token = localStorage.getItem("token");
-    const response = await axios.get("http://localhost:3001/api/v1/accounts/balance", {
+    const response = await axios.get("https://paytm-j2ss.onrender.com/api/v1/accounts/balance", {
       headers: {
         Authorization: `Bearer ${token}`
       }

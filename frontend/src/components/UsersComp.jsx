@@ -7,7 +7,7 @@ function UsersComp({signedUser}) {
    const [users, setUser] = useState([]);
    const [filter, setFilter] = useState("")
   useEffect(()=>{
-    axios.get("http://localhost:3001/api/v1/user/bulk?filter=" + filter)
+    axios.get("https://paytm-j2ss.onrender.com/api/v1/user/bulk?filter=" + filter)
     .then(response => {
         setUser(response.data.user)
     })

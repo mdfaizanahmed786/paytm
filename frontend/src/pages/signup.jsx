@@ -21,7 +21,7 @@ function Signup() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:3001/api/v1/user/signup",
+        "https://paytm-j2ss.onrender.com/api/v1/user/signup",
         {
           username,
           firstname,
