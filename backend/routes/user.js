@@ -12,8 +12,8 @@ router.post("/signup", async (req, res) => {
   try {
     const SignupAuth = z.object({
       username: z.string().email(),
-      firstname: z.string().min(5).max(15),
-      lastname: z.string().min(5).max(15),
+      firstname: z.string().min(3),
+      lastname: z.string().min(3),
       password: z.string().min(8),
     });
 
@@ -59,8 +59,8 @@ router.post("/signup", async (req, res) => {
 
 router.post("/signin", async (req, res) => {
   const signinAuth = z.object({
-    username: z.string(),
     password: z.string().min(8),
+    username: z.string(),
   });
 
   const { success } = signinAuth.safeParse(req.body);
@@ -83,18 +83,25 @@ router.post("/signin", async (req, res) => {
     }
 
     const userId = findingUser._id;
+    const userName = findingUser.firstname
     const token = jwt.sign({ userId }, JWT_SECRET);
 
     res.status(200).json({
       message: "User signed in successfully",
       token,
+      userName
     });
   } catch (err) {
     console.error("Error:", err);
     return res.status(500).json({ message: "Internal server error", error: err });
   }
 });
-
+router.get("/allusers", async(req, res)=>{
+   const users = await User.find({})
+   res.json({
+    users
+   })
+})
 router.put("/", middleWare, async(req, res)=>{
   const updatingValidation = z.object({
     firstname:z.string().min(5).optional(),
@@ -117,25 +124,27 @@ router.put("/", middleWare, async(req, res)=>{
 
 })
 router.get("/bulk", async(req, res)=>{
-  const filter = req.params.filter || ""
-  const users = await User.find({
-    "$or":[{
-       firstname:{
-        "$regex": filter
-       },
-       lastname:{
-        "$regex": filter
-       }
-    }]
-  })
-  res.json({
-    user: users.map(user => ({
-        username: user.username,
-        firstname: user.firstname,
-        lastname: user.lastname,
-        _id: user._id
-    }))
-})
+  const filter = req.query.filter || "";
 
+  const users = await User.find({
+      $or: [{
+          firstname: {
+              "$regex": filter
+          }
+      }, {
+          lastname: {
+              "$regex": filter
+          }
+      }]
+  })
+
+  res.json({
+      user: users.map(user => ({
+          username: user.username,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          _id: user._id
+      }))
+  })
 })
 module.exports = router;
